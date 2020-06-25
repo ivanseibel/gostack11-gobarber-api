@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "build": "yarn tsc",
-    "dev:server": "yarn ts-node-dev --transpileOnly --ignore-watch node_modules src/server.ts"
+    "dev:server": "yarn ts-node-dev --inspect --transpileOnly --ignore-watch node_modules src/server.ts"
   },
   "author": "Ivan Seibel <ivanseibel@gmail.com>",
   "devDependencies": {
