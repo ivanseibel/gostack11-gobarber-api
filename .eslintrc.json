@@ -24,7 +24,7 @@
       "ignorePackages",
       {
         "ts": "never"
-      },
+      }
     ],
     "prettier/prettier": "error"
   },
