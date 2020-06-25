@@ -32,4 +32,4 @@ class AppointmentRepository {
   }
 }
 
-export default new AppointmentRepository();
+export default AppointmentRepository;
