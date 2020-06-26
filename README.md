@@ -4,4 +4,4 @@ This API is part of the GoBarber project that implements a fictitious service, i
 
 GoBarber project is one of the several that are implemented during Rocketset GoStack bootcamp.
 
-**🏗 👷🏻 🚧 Under construction 🚧 👷🏻 🏗**
+🏗 👷🏻 🚧 Under construction 🚧 👷🏻 🏗
