@@ -1,11 +1,26 @@
 import { Router } from 'express';
 import { getRepository } from 'typeorm';
 
+import multer from 'multer';
 import CreateUserService from '../services/CreateUserService';
 import User from '../models/User';
+import ensureAuthenticated from '../middlewares/ensureAuthenticated';
+import uploadsConfig from '../config/uploads';
 
 const usersRouter = Router();
+
 const createUserService = new CreateUserService();
+
+const upload = multer(uploadsConfig);
+
+usersRouter.patch(
+  '/avatar',
+  ensureAuthenticated,
+  upload.single('avatar'),
+  async (request, response) => {
+    return response.json(request.file);
+  },
+);
 
 usersRouter.post('/', async (request, response) => {
   try {
