@@ -15,6 +15,9 @@ class Appointment {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column('varchar')
+  provider_id: string;
+
   @ManyToOne(() => User)
   @JoinColumn({ name: 'provider_id' })
   provider: User;
