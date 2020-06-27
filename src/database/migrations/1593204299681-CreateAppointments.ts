@@ -16,13 +16,21 @@ export default class CreateAppointments1593204299681
           },
           {
             name: 'provider',
-            isNullable: false,
             type: 'varchar',
           },
           {
             name: 'date',
             type: 'timestamp with time zone',
-            isNullable: false,
+          },
+          {
+            name: 'created_at',
+            type: 'timestamp',
+            default: 'now()',
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp',
+            default: 'now()',
           },
         ],
       }),
