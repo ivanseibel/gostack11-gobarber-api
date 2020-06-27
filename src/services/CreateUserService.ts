@@ -1,6 +1,7 @@
 import { getRepository } from 'typeorm';
 import { hash } from 'bcryptjs';
 import User from '../models/User';
+import AppError from '../errors/AppError';
 
 interface Register {
   name: string;
@@ -19,7 +20,7 @@ class CreateUserService {
     });
 
     if (emailAlreadyExists) {
-      throw Error('Email is already in use');
+      throw new AppError('Email is already in use');
     }
 
     const user = userRepository.create({
