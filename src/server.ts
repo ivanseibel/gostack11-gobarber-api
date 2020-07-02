@@ -1,13 +1,15 @@
 import 'express-async-errors';
 import 'reflect-metadata';
 import express, { Request, Response, NextFunction } from 'express';
+import cors from 'cors';
 import routes from './routes';
 import uploadConfig from './config/uploads';
-
 import './database';
 import AppError from './errors/AppError';
 
 const app = express();
+
+app.use(cors());
 
 app.use(express.json());
 
