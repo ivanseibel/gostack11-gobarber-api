@@ -2,10 +2,11 @@ import 'express-async-errors';
 import 'reflect-metadata';
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
+import uploadConfig from '@config/uploads';
+import AppError from '@shared/errors/AppError';
 import routes from './routes';
-import uploadConfig from './config/uploads';
-import './database';
-import AppError from './errors/AppError';
+
+import '@shared/infra/typeorm'; // Database connection
 
 const app = express();
 
