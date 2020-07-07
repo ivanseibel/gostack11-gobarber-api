@@ -7,6 +7,7 @@ import AppError from '@shared/errors/AppError';
 import routes from './routes';
 
 import '@shared/infra/typeorm'; // Database connection
+import '@shared/container';
 
 const app = express();
 
