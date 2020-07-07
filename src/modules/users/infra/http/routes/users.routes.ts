@@ -1,27 +1,30 @@
 import { Router } from 'express';
-import { getRepository } from 'typeorm';
 
 import multer from 'multer';
 import CreateUserService from '@modules/users/services/CreateUserService';
-import User from '@modules/users/infra/typeorm/entities/User';
 import ensureAuthenticated from '@modules/users/infra/http/middlewares/ensureAuthenticated';
 import uploadsConfig from '@config/uploads';
 import UpdateUserAvatarService from '@modules/users/services/UpdateUserAvatarService';
+import UsersRepository from '../../typeorm/repositories/UsersRepository';
 
 const usersRouter = Router();
 
-const createUserService = new CreateUserService();
-
 const upload = multer(uploadsConfig);
+
+// usersRouter.get('/', async (request, response) => {
+//   const usersRepository = getRepository(User);
+//   const users = await usersRepository.find();
+//   return response.json(users);
+// });
 
 usersRouter.patch(
   '/avatar',
   ensureAuthenticated,
   upload.single('avatar'),
   async (request, response) => {
-    const updateUserAvatarService = new UpdateUserAvatarService();
+    const updateUserAvatar = new UpdateUserAvatarService(new UsersRepository());
 
-    const user = await updateUserAvatarService.execute({
+    const user = await updateUserAvatar.execute({
       avatarFileName: request.file.filename,
       user_id: request.user.id,
     });
@@ -35,7 +38,8 @@ usersRouter.patch(
 usersRouter.post('/', async (request, response) => {
   const { name, email, password } = request.body;
 
-  const user = await createUserService.execute({
+  const createUser = new CreateUserService(new UsersRepository());
+  const user = await createUser.execute({
     name,
     email,
     password,
@@ -44,12 +48,6 @@ usersRouter.post('/', async (request, response) => {
   delete user.password;
 
   return response.json(user);
-});
-
-usersRouter.get('/', async (request, response) => {
-  const usersRepository = getRepository(User);
-  const users = await usersRepository.find();
-  return response.json(users);
 });
 
 export default usersRouter;
