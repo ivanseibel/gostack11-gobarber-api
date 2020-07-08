@@ -26,7 +26,7 @@ class CreateUserService {
       throw new AppError('Email is already in use');
     }
 
-    const user = this.userRepository.create({
+    const user = await this.userRepository.create({
       name,
       email,
       password: hashedPassword,
