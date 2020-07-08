@@ -4,7 +4,7 @@ import { injectable, inject } from 'tsyringe';
 import IUsersRepository from '../repositories/IUsersRepository';
 import IHashProvider from '../providers/HashProvider/models/IHashProvider';
 
-interface Register {
+interface IRegister {
   name: string;
   email: string;
   password: string;
@@ -19,7 +19,7 @@ class CreateUserService {
     private hashProvider: IHashProvider,
   ) {}
 
-  public async execute({ name, email, password }: Register): Promise<User> {
+  public async execute({ name, email, password }: IRegister): Promise<User> {
     const hashedPassword = await this.hashProvider.generateHash(password);
 
     const emailAlreadyExists = await this.userRepository.findByEmail(email);
