@@ -30,7 +30,7 @@ app.use((err: Error, request: Request, response: Response, _: NextFunction) => {
   });
 });
 
-app.use('/files', express.static(uploadConfig.avatarDir));
+app.use('/files', express.static(uploadConfig.uploadsDir));
 
 app.listen(3333, () => {
   // eslint-disable-next-line no-console
