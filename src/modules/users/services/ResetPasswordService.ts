@@ -1,7 +1,9 @@
 import { injectable, inject } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
+import { isAfter, addHours } from 'date-fns';
 import IUsersRepository from '../repositories/IUsersRepository';
 import IUserTokensRepository from '../repositories/IUserTokensRepository';
+import IHashProvider from '../providers/HashProvider/models/IHashProvider';
 
 interface IRequest {
   token: string;
@@ -16,6 +18,9 @@ export default class ResetPasswordService {
 
     @inject('UserTokensRepository')
     private userTokensRepository: IUserTokensRepository,
+
+    @inject('HashProvider')
+    private hashProvider: IHashProvider,
   ) {}
 
   public async execute({ token, password }: IRequest): Promise<void> {
@@ -25,13 +30,19 @@ export default class ResetPasswordService {
       throw new AppError('User token does not exists.');
     }
 
-    const user = await this.usersRepository.findById(userToken?.user_id);
+    const user = await this.usersRepository.findById(userToken.user_id);
 
     if (!user) {
       throw new AppError('User does not exists.');
     }
 
-    user.password = password;
+    const thisMoment = Date.now();
+
+    if (isAfter(thisMoment, addHours(userToken.created_at, 2))) {
+      throw new AppError('Have been passed 2h after token creation.');
+    }
+
+    user.password = await this.hashProvider.generateHash(password);
 
     await this.usersRepository.save(user);
   }
