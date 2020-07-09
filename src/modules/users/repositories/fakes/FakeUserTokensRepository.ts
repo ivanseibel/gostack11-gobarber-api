@@ -3,7 +3,7 @@ import UserToken from '@modules/users/infra/typeorm/entities/UserToken';
 import IUserTokensRepository from '../IUserTokensRepository';
 
 class UserTokensRepository implements IUserTokensRepository {
-  private UserTokens: UserToken[] = [];
+  private userTokens: UserToken[] = [];
 
   public async generate(user_id: string): Promise<UserToken> {
     const userToken = new UserToken();
@@ -14,9 +14,13 @@ class UserTokensRepository implements IUserTokensRepository {
       user_id,
     });
 
-    this.UserTokens.push(userToken);
+    this.userTokens.push(userToken);
 
     return userToken;
+  }
+
+  public async findByToken(token: string): Promise<UserToken | undefined> {
+    return this.userTokens.find(userToken => userToken.token === token);
   }
 }
 
