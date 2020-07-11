@@ -1,18 +1,19 @@
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import ICreateUserDTO from '@modules/users/dtos/ICreateUserDTO';
 import { uuid } from 'uuidv4';
+import IListProvidersDTO from '@modules/users/dtos/IListProvidersDTO';
 import User from '../../infra/typeorm/entities/User';
 
 class UsersRepository implements IUsersRepository {
-  private Users: User[] = [];
+  private users: User[] = [];
 
   public async findByEmail(email: string): Promise<User | undefined> {
-    const user = this.Users.find(item => item.email === email);
+    const user = this.users.find(item => item.email === email);
     return user;
   }
 
   public async findById(id: string): Promise<User | undefined> {
-    return this.Users.find(item => item.id === id);
+    return this.users.find(item => item.id === id);
   }
 
   public async create(userData: ICreateUserDTO): Promise<User> {
@@ -20,17 +21,23 @@ class UsersRepository implements IUsersRepository {
 
     Object.assign(user, { id: uuid() }, userData);
 
-    this.Users.push(user);
+    this.users.push(user);
 
     return user;
   }
 
   public async save(user: User): Promise<User> {
-    const index = this.Users.findIndex(item => item.id === user.id);
+    const index = this.users.findIndex(item => item.id === user.id);
 
-    Object.assign(this.Users[index], user);
+    Object.assign(this.users[index], user);
 
-    return this.Users[index];
+    return this.users[index];
+  }
+
+  public async listProviders({
+    except_user_id,
+  }: IListProvidersDTO): Promise<User[] | undefined> {
+    return this.users.filter(user => user.id !== except_user_id);
   }
 }
 
