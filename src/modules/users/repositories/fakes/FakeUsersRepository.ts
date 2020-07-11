@@ -36,7 +36,7 @@ class UsersRepository implements IUsersRepository {
 
   public async listProviders({
     except_user_id,
-  }: IListProvidersDTO): Promise<User[] | undefined> {
+  }: IListProvidersDTO): Promise<User[]> {
     return this.users.filter(user => user.id !== except_user_id);
   }
 }
