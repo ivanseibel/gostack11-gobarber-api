@@ -10,9 +10,7 @@ export default class ShowProfileService {
     private usersRepository: IUsersRepository,
   ) {}
 
-  public async execute({
-    except_user_id,
-  }: IListProvidersDTO): Promise<User[] | undefined> {
+  public async execute({ except_user_id }: IListProvidersDTO): Promise<User[]> {
     const users = await this.usersRepository.listProviders({
       except_user_id,
     });
