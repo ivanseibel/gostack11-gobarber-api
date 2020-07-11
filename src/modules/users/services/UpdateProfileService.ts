@@ -63,6 +63,8 @@ export default class UpdateProfileService {
     user.email = email;
     user.name = name;
 
-    return this.usersRepository.save(user);
+    await this.usersRepository.save(user);
+
+    return user;
   }
 }
