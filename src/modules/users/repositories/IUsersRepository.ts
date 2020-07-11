@@ -7,7 +7,5 @@ export default interface IUsersRepository {
   findByEmail(email: string): Promise<User | undefined>;
   create(data: ICreateUserDTO): Promise<User>;
   save(user: User): Promise<User>;
-  listProviders({
-    except_user_id,
-  }: IListProvidersDTO): Promise<User[] | undefined>;
+  listProviders({ except_user_id }: IListProvidersDTO): Promise<User[]>;
 }
