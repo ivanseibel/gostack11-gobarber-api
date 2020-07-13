@@ -3,6 +3,7 @@ import { startOfMonth, endOfMonth } from 'date-fns';
 import IAppointmentsRepository from '@modules/appointments/repositories/IAppointmentsRepository';
 import ICreateAppointmentDTO from '@modules/appointments/dtos/ICreateAppointmentDTO';
 import IFindByMonthDTO from '@modules/appointments/dtos/IFindByMonthDTO';
+import IFindByDayDTO from '@modules/appointments/dtos/IFindByDayDTO';
 import Appointment from '../entities/Appointment';
 
 class AppointmentsRepository implements IAppointmentsRepository {
@@ -36,6 +37,22 @@ class AppointmentsRepository implements IAppointmentsRepository {
     const where = provider_id
       ? { id: provider_id, date: Between(firstDay, lastDay) }
       : { date: Between(firstDay, lastDay) };
+
+    return this.ormRepository.find(where);
+  }
+
+  public async findByDay({
+    provider_id,
+    day,
+    month,
+    year,
+  }: IFindByDayDTO): Promise<Appointment[]> {
+    const startDay = new Date(year, month - 1, day, 0, 0);
+    const endDay = new Date(year, month - 1, day, 23, 59);
+
+    const where = provider_id
+      ? { id: provider_id, date: Between(startDay, endDay) }
+      : { date: Between(startDay, endDay) };
 
     return this.ormRepository.find(where);
   }
