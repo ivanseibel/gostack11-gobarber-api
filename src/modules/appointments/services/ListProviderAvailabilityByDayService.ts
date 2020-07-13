@@ -1,5 +1,5 @@
 import { injectable, inject } from 'tsyringe';
-import { getHours } from 'date-fns';
+import { getHours, isAfter } from 'date-fns';
 import IFindByDayDTO from '../dtos/IFindByDayDTO';
 import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
 
@@ -34,12 +34,19 @@ export default class ShowProfileService {
       year,
     });
 
+    const actualTime = Date.now();
+
     const availability = eachHourOfDay.map(eachHour => {
       const available = appointments.find(appointment => {
         return getHours(appointment.date) === eachHour;
       });
 
-      return { hour: eachHour, available: !available };
+      const compareTime = new Date(year, month - 1, day, eachHour);
+
+      return {
+        hour: eachHour,
+        available: !available && isAfter(compareTime, actualTime),
+      };
     });
 
     return availability;
