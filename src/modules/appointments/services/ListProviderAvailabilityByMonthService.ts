@@ -1,5 +1,5 @@
 import { injectable, inject } from 'tsyringe';
-import { getDate, endOfMonth } from 'date-fns';
+import { getDate, getDaysInMonth } from 'date-fns';
 import IFindByMonthDTO from '../dtos/IFindByMonthDTO';
 import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
 
@@ -20,29 +20,30 @@ export default class ShowProfileService {
     month,
     year,
   }: IFindByMonthDTO): Promise<IResponse> {
-    const endDay = getDate(endOfMonth(new Date(2020, month - 1, 1)));
-
     const appointments = await this.appointmentsRepository.findByMonth({
       provider_id,
       month,
       year,
     });
 
-    const daysOfMonth = [];
+    const numberOfDaysInMonth = getDaysInMonth(new Date(2020, month - 1));
 
-    for (let i = 1; i <= endDay; i += 1) {
-      const available =
-        appointments.findIndex(appointment => {
-          return getDate(appointment.date) === i;
-        }) === -1;
-      const availability = {
-        day: i,
-        available,
+    const eachDayInMonth = Array.from(
+      { length: numberOfDaysInMonth },
+      (_, index) => index + 1,
+    );
+
+    const availability = eachDayInMonth.map(eachDay => {
+      const appointmentsInDay = appointments.filter(appointment => {
+        return getDate(appointment.date) === eachDay;
+      });
+
+      return {
+        day: eachDay,
+        available: appointmentsInDay.length < 10,
       };
+    });
 
-      daysOfMonth.push(availability);
-    }
-
-    return daysOfMonth;
+    return availability;
   }
 }
