@@ -1,4 +1,4 @@
-import { startOfHour, isBefore } from 'date-fns';
+import { startOfHour, isBefore, getHours } from 'date-fns';
 import { injectable, inject } from 'tsyringe';
 
 import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
@@ -40,6 +40,12 @@ class CreateAppointmentService {
 
     if (timeUnavailable) {
       throw new AppError('Time is not available');
+    }
+
+    if (getHours(date) < 8 || getHours(date) > 17) {
+      throw new AppError(
+        'You can only create appointments between 8am and 5pm.',
+      );
     }
 
     const appointment = await this.appointmentsRepository.create({
