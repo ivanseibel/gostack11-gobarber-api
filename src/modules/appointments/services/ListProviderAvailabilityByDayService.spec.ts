@@ -5,7 +5,7 @@ let fakeAppointmentsRepository: FakeAppointmentsRepository;
 
 let listProviderAvailabilityByDay: ListProviderAvailabilityByDay;
 
-describe('ListProviderAvailabilityByMonthService', () => {
+describe('ListProviderAvailabilityByDayService', () => {
   beforeEach(() => {
     fakeAppointmentsRepository = new FakeAppointmentsRepository();
 
@@ -14,7 +14,7 @@ describe('ListProviderAvailabilityByMonthService', () => {
     );
   });
 
-  it('should be able to show profile', async () => {
+  it('should be able to list provider availability bay day of month', async () => {
     await fakeAppointmentsRepository.create({
       date: new Date(2020, 5, 1, 10, 30, 0),
       user_id: 'user-id',
