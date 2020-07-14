@@ -61,8 +61,6 @@ class AppointmentsRepository implements IAppointmentsRepository {
 
     const appointments = await this.ormRepository.find(where);
 
-    console.log(appointments);
-
     return appointments;
   }
 }
