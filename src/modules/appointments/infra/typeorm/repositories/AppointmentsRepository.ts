@@ -40,7 +40,7 @@ class AppointmentsRepository implements IAppointmentsRepository {
     const lastDay = endOfMonth(new Date(year, month - 1, 1));
 
     const where = provider_id
-      ? { id: provider_id, date: Between(firstDay, lastDay) }
+      ? { provider_id, date: Between(firstDay, lastDay) }
       : { date: Between(firstDay, lastDay) };
 
     return this.ormRepository.find(where);
@@ -56,10 +56,14 @@ class AppointmentsRepository implements IAppointmentsRepository {
     const endDay = new Date(year, month - 1, day, 23, 59);
 
     const where = provider_id
-      ? { id: provider_id, date: Between(startDay, endDay) }
+      ? { provider_id, date: Between(startDay, endDay) }
       : { date: Between(startDay, endDay) };
 
-    return this.ormRepository.find(where);
+    const appointments = await this.ormRepository.find(where);
+
+    console.log(appointments);
+
+    return appointments;
   }
 }
 
