@@ -1,4 +1,5 @@
 import AppError from '@shared/errors/AppError';
+import { addHours } from 'date-fns';
 import FakeAppointmentRepository from '../repositories/fakes/FakeAppointmentsRepository';
 import CreateAppointmentService from './CreateAppointmentService';
 
@@ -10,37 +11,54 @@ describe('CreateAppointment', () => {
     );
 
     const appointment = await createAppointment.execute({
-      provider_id: '123456',
-      date: new Date(),
+      user_id: 'user-id',
+      provider_id: 'provider-id',
+      date: addHours(new Date(), 1),
     });
 
     expect(appointment).toHaveProperty('id');
-    expect(appointment.provider_id).toBe('123456');
+    expect(appointment.provider_id).toBe('provider-id');
   });
 
-  it('should not be able to create a new appointment', async () => {
+  it('should not be able to create two appointments on the same time', async () => {
     const appointmentRepository = new FakeAppointmentRepository();
     const createAppointment = new CreateAppointmentService(
       appointmentRepository,
     );
 
-    const appointmentDate = new Date(2020, 4, 10, 11);
+    const appointmentDate = addHours(new Date(), 1);
 
     await createAppointment.execute({
-      provider_id: '123456',
+      user_id: 'user-id',
+      provider_id: 'provider-id',
       date: appointmentDate,
     });
 
-    let error;
-
-    try {
-      await createAppointment.execute({
-        provider_id: '123456',
+    await expect(
+      createAppointment.execute({
+        user_id: 'user-id',
+        provider_id: 'provider-id',
         date: appointmentDate,
-      });
-    } catch (err) {
-      error = err;
-    }
-    expect(error).toBeInstanceOf(AppError);
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
+
+  it('should not be able to create appointments on the past', async () => {
+    const appointmentRepository = new FakeAppointmentRepository();
+    const createAppointment = new CreateAppointmentService(
+      appointmentRepository,
+    );
+
+    jest.spyOn(Date, 'now').mockImplementationOnce(() => {
+      return new Date(2020, 5, 1, 11, 0).getTime();
+    });
+
+    await expect(
+      createAppointment.execute({
+        user_id: 'user-id',
+        provider_id: 'provider-id',
+        date: new Date(2020, 5, 1, 8, 0),
+      }),
+    ).rejects.toBeInstanceOf(AppError);
   });
 });
