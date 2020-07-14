@@ -1,5 +1,5 @@
 import AppError from '@shared/errors/AppError';
-import { addHours } from 'date-fns';
+import { addHours, addMinutes } from 'date-fns';
 import FakeAppointmentRepository from '../repositories/fakes/FakeAppointmentsRepository';
 import CreateAppointmentService from './CreateAppointmentService';
 
@@ -58,6 +58,21 @@ describe('CreateAppointment', () => {
         user_id: 'user-id',
         provider_id: 'provider-id',
         date: new Date(2020, 5, 1, 8, 0),
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
+
+  it('should not be able to create appointments to the logged user', async () => {
+    const appointmentRepository = new FakeAppointmentRepository();
+    const createAppointment = new CreateAppointmentService(
+      appointmentRepository,
+    );
+
+    await expect(
+      createAppointment.execute({
+        user_id: 'user-id',
+        provider_id: 'user-id',
+        date: addMinutes(new Date(), 30),
       }),
     ).rejects.toBeInstanceOf(AppError);
   });

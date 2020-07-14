@@ -34,6 +34,10 @@ class CreateAppointmentService {
       appointmentDate,
     );
 
+    if (user_id === provider_id) {
+      throw new AppError('User and provider cannot be the same.');
+    }
+
     if (timeUnavailable) {
       throw new AppError('Time is not available');
     }
