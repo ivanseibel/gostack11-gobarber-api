@@ -9,7 +9,7 @@ type IResponse = Array<{
 }>;
 
 @injectable()
-export default class ShowProfileService {
+export default class ListProviderAvailabilityByMonthService {
   constructor(
     @inject('AppointmentsRepository')
     private appointmentsRepository: IAppointmentsRepository,
