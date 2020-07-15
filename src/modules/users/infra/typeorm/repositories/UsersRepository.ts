@@ -30,7 +30,7 @@ class UsersRepository implements IUsersRepository {
 
   public async listProviders({
     except_user_id,
-  }: IListProvidersDTO): Promise<User[] | undefined> {
+  }: IListProvidersDTO): Promise<User[]> {
     const where = except_user_id ? { id: Not(except_user_id) } : undefined;
 
     const providers = await this.ormRepository.find(where);
