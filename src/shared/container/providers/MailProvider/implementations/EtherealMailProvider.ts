@@ -49,7 +49,6 @@ class EtherealMailProvider implements IMailProvider {
         name: to.name,
       },
       subject,
-      text: 'Test',
       html: await this.mailTemplateProvider.parse(templateData),
     });
 
