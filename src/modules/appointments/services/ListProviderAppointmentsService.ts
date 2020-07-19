@@ -20,12 +20,20 @@ export default class ShowProfileService {
     month,
     year,
   }: IListProviderAppointmentsDTO): Promise<Appointment[]> {
-    const appointments = await this.appointmentsRepository.findByDay({
-      provider_id,
-      day,
-      month,
-      year,
-    });
+    const key = `provider-appointments:${provider_id}:${year}-${month}-${day}`;
+
+    let appointments = await this.cacheProvider.recover<Appointment[]>(key);
+
+    if (!appointments) {
+      appointments = await this.appointmentsRepository.findByDay({
+        provider_id,
+        day,
+        month,
+        year,
+      });
+
+      await this.cacheProvider.save(key, appointments);
+    }
 
     return appointments;
   }
