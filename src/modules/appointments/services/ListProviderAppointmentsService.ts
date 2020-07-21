@@ -1,11 +1,12 @@
 import { injectable, inject } from 'tsyringe';
 import ICacheProvider from '@shared/container/providers/CacheProvider/models/ICacheProvider';
+import { classToClass } from 'class-transformer';
 import IListProviderAppointmentsDTO from '../dtos/IListProviderAppointmentsDTO';
 import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
 import Appointment from '../infra/typeorm/entities/Appointment';
 
 @injectable()
-export default class ShowProfileService {
+export default class ListProviderAppointmentsService {
   constructor(
     @inject('AppointmentsRepository')
     private appointmentsRepository: IAppointmentsRepository,
@@ -31,6 +32,8 @@ export default class ShowProfileService {
         month,
         year,
       });
+
+      appointments = classToClass(appointments);
 
       await this.cacheProvider.save(key, appointments);
     }
