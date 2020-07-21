@@ -62,7 +62,10 @@ class AppointmentsRepository implements IAppointmentsRepository {
       ? { provider_id, date: Between(startDay, endDay) }
       : { date: Between(startDay, endDay) };
 
-    const appointments = await this.ormRepository.find(where);
+    const appointments = await this.ormRepository.find({
+      ...where,
+      relations: ['user'],
+    });
 
     return appointments;
   }
