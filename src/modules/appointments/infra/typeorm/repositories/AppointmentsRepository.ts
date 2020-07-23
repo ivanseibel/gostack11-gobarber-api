@@ -46,7 +46,7 @@ class AppointmentsRepository implements IAppointmentsRepository {
       ? { provider_id, date: Between(firstDay, lastDay) }
       : { date: Between(firstDay, lastDay) };
 
-    return this.ormRepository.find(where);
+    return this.ormRepository.find({ where, order: { date: 'ASC' } });
   }
 
   public async findByDay({
@@ -63,7 +63,8 @@ class AppointmentsRepository implements IAppointmentsRepository {
       : { date: Between(startDay, endDay) };
 
     const appointments = await this.ormRepository.find({
-      ...where,
+      where,
+      order: { date: 'ASC' },
       relations: ['user'],
     });
 
