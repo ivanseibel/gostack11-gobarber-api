@@ -3,6 +3,7 @@ import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import IListProvidersDTO from '@modules/users/dtos/IListProvidersDTO';
 import User from '@modules/users/infra/typeorm/entities/User';
 import ICacheProvider from '@shared/container/providers/CacheProvider/models/ICacheProvider';
+import { classToClass } from 'class-transformer';
 
 @injectable()
 export default class ShowProfileService {
@@ -23,6 +24,8 @@ export default class ShowProfileService {
       users = await this.usersRepository.listProviders({
         except_user_id,
       });
+
+      users = classToClass(users);
 
       await this.cacheProvider.save(`providers-list:${except_user_id}`, users);
     }
