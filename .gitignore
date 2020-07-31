@@ -5,3 +5,4 @@ coverage
 ormconfig.json
 .env
 .vscode
+dist
